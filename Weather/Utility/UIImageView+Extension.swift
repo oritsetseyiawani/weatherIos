@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-// To load image for the movie selection
+// To load image for the weather 
 extension UIImageView {
     func load (urlString: String) {
         guard let url = URL(string: urlString)
