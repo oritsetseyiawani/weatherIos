@@ -6,15 +6,16 @@
 //
 
 import Foundation
-
+import Combine
 
 protocol Networkable{
-    func performRequest(baseUrl: String, path: String, params: [String: String], completionHandler:@escaping(Result<WeatherData, Error>) -> Void)
+    func performRequest(baseUrl: String, path: String, params: [String: String]) -> Future<WeatherData,Error>
 }
 
 class NetworkManager: Networkable{
         
-    func performRequest(baseUrl: String, path: String, params: [String: String], completionHandler:@escaping(Result<WeatherData, Error>) -> Void){
+    func performRequest(baseUrl: String, path: String, params: [String: String]) -> Future<WeatherData,Error>{
+        return Future { promise in
         
         var urlComponents = URLComponents(string: baseUrl.appending(path))
         let queryItems = params.map { key, value in
@@ -36,16 +37,14 @@ class NetworkManager: Networkable{
                 let decoder = JSONDecoder()
                 do{
                     let decodedData = try decoder.decode(WeatherData.self, from: safeData)
-                    completionHandler(.success(decodedData))
-                    
+                    promise(.success(decodedData))
                 } catch{
-                    completionHandler(.failure(error))
-                    print(error)
+                    promise(.failure(error))
                 }
             }
         }
         dataTask.resume()
-        
+        }
     }
     
     func didFailWithError(error: Error) {
