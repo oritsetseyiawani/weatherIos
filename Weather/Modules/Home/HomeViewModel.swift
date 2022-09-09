@@ -7,6 +7,7 @@
 
 import Foundation
 import CoreLocation
+import Combine
 
 protocol HomeViewModelType {
     var dataReceivedFromAPI: WeatherData? {get}
@@ -15,7 +16,7 @@ protocol HomeViewModelType {
     func informNetworkManagerToPerformRequest(latitude: CLLocationDegrees, longitude: CLLocationDegrees, isDataReturned:@escaping(_ response: Bool)->Void)
     var tableViewData: [WeatherRecord] {get}
     func getBackgroundImage()-> String
-
+    
 }
 
 class HomeViewModel: HomeViewModelType {
@@ -26,40 +27,41 @@ class HomeViewModel: HomeViewModelType {
     }
     var dataReceivedFromAPI: WeatherData?
     var tableViewData: [WeatherRecord] = []
+    var observers: [AnyCancellable] = []
+
     
     func informNetworkManagerToPerformRequest(textEntered: String, isDataReturned:@escaping(_ response: Bool)->Void){
-        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key":"3215a185b25eb297a66e63d137fb994f", "units": "metric", "q": textEntered, "appid": "111c704b48268f9adbc8dce3c913c272"]) {[weak self] result in
-            
-            switch(result){
-            case .success(let weatherData):
-                self?.populateTableView(weatherData: weatherData)
-                self?.dataReceivedFromAPI = weatherData
-                isDataReturned(true)
-            case .failure(let error):
-                print(error)
-                self?.tableViewData = []
-                isDataReturned(false)
+
+        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key":"3215a185b25eb297a66e63d137fb994f", "units": "metric", "q": textEntered, "appid": "111c704b48268f9adbc8dce3c913c272"]).sink { completion in
+            switch(completion) {
+            case .finished:
+                print("")
+            case .failure(let completion):
+                print(completion)
             }
-        }
-        
+        } receiveValue: { [weak self] weatherData in
+            self?.populateTableView(weatherData: weatherData)
+            self?.dataReceivedFromAPI = weatherData
+            isDataReturned(true)
+        }.store(in: &observers)
     }
     
     
+    
     func informNetworkManagerToPerformRequest(latitude: CLLocationDegrees, longitude: CLLocationDegrees, isDataReturned:@escaping(_ response: Bool)->Void){
-        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key":"3215a185b25eb297a66e63d137fb994f", "units": "metric", "lat": "\(latitude)", "lon": "\(longitude)", "appid": "111c704b48268f9adbc8dce3c913c272"]) {[weak self] result in
-            
-            switch(result){
-            case .success(let weatherData):
-                self?.dataReceivedFromAPI = weatherData
-                self?.populateTableView(weatherData: weatherData)
-                self?.dataReceivedFromAPI = weatherData
-                isDataReturned(true)
-            case .failure(let error):
-                print(error)
-                self?.tableViewData = []
-                isDataReturned(false)
+
+        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key":"3215a185b25eb297a66e63d137fb994f", "units": "metric", "lat": "\(latitude)", "lon": "\(longitude)", "appid": "111c704b48268f9adbc8dce3c913c272"]).sink { completion in
+            switch(completion) {
+            case .finished:
+                print("")
+            case .failure(let completion):
+                print(completion)
             }
-        }
+        } receiveValue: { [weak self] weatherData in
+            self?.populateTableView(weatherData: weatherData)
+            self?.dataReceivedFromAPI = weatherData
+            isDataReturned(true)
+        }.store(in: &observers)
     }
     
     func getWeatherIconURL()->String{
@@ -87,21 +89,9 @@ class HomeViewModel: HomeViewModelType {
         switch (weatherDescription) {
         case "clear sky":
             return "clearSky"
-        case "few clouds":
+        case "few clouds", "scattered clouds", "broken clouds", "overcast clouds":
             return "cloud"
-        case "scattered clouds":
-           return "cloud"
-        case "broken clouds":
-            return "cloud"
-        case "overcast clouds":
-            return "overcast"
-        case "shower rain":
-           return "rain"
-        case "rain":
-           return "rain"
-        case "light rain":
-            return "rain"
-        case "moderate rain":
+        case "shower rain", "rain", "light rain", "moderate rain":
             return "rain"
         case "snow":
             return "snow"
