@@ -15,6 +15,7 @@ WeatherIos is an app that allows users to view details on the weather in any spe
 * UiKit
 * CoreLocation
 * URLSession
+* Combine
 * Open Weather's API
 
 ### Architectural Design Pattern:
