@@ -38,26 +38,4 @@ class HomeViewModelTests: XCTestCase {
         }
     }
 
-    func testGetWeatherData() {
-    
-        guard   let url = Bundle(for: MockNetworkManager.self).url(forResource: "weather", withExtension: ".json"),
-        let data = try? Data(contentsOf: url) else {
-            assertionFailure("Failed to read data ")
-            return
-        }
-        
-        
-        do {
-            let weatherList = try JSONDecoder().decode([Weather].self, from: data)
-            
-            XCTAssertNotNil(weatherList)
-            XCTAssertEqual(weatherList.count, 1 )
-        } catch {
-//            XCTAssertFail("Failed to parse weather data ")
-
-        }
-       
-    }
-
-
 }

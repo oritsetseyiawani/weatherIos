@@ -23,7 +23,6 @@
 		B16D0C602805EAF8002FA08E /* EndPoints.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16D0C5F2805EAF8002FA08E /* EndPoints.swift */; };
 		B16D0C622805F106002FA08E /* HomeViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B16D0C612805F106002FA08E /* HomeViewModel.swift */; };
 		B1874D772851EAF500B58F3F /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1874D762851EAF500B58F3F /* Constants.swift */; };
-		B1A12DDD28216C97005FE1DD /* weather.json in Resources */ = {isa = PBXBuildFile; fileRef = B1A12DDC28216C97005FE1DD /* weather.json */; };
 		B1E819772805FFA000A588CB /* UIImageView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E819762805FFA000A588CB /* UIImageView+Extension.swift */; };
 		B1E819792806B9A100A588CB /* HomeViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E819782806B9A100A588CB /* HomeViewModelTests.swift */; };
 		B1E8197B2806BA7700A588CB /* MockNetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1E8197A2806BA7700A588CB /* MockNetworkManager.swift */; };
@@ -68,7 +67,6 @@
 		B16D0C5F2805EAF8002FA08E /* EndPoints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndPoints.swift; sourceTree = "<group>"; };
 		B16D0C612805F106002FA08E /* HomeViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModel.swift; sourceTree = "<group>"; };
 		B1874D762851EAF500B58F3F /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		B1A12DDC28216C97005FE1DD /* weather.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = weather.json; sourceTree = "<group>"; };
 		B1E819762805FFA000A588CB /* UIImageView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImageView+Extension.swift"; sourceTree = "<group>"; };
 		B1E819782806B9A100A588CB /* HomeViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewModelTests.swift; sourceTree = "<group>"; };
 		B1E8197A2806BA7700A588CB /* MockNetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockNetworkManager.swift; sourceTree = "<group>"; };
@@ -146,7 +144,6 @@
 				B1E819782806B9A100A588CB /* HomeViewModelTests.swift */,
 				B1E8197A2806BA7700A588CB /* MockNetworkManager.swift */,
 				B1E8198228081C0400A588CB /* URL+Extension.swift */,
-				B1A12DDC28216C97005FE1DD /* weather.json */,
 			);
 			path = WeatherTests;
 			sourceTree = "<group>";
@@ -309,7 +306,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B1A12DDD28216C97005FE1DD /* weather.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
