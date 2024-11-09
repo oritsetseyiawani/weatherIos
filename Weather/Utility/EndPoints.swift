@@ -7,10 +7,10 @@
 
 import Foundation
 
-struct EndPoints {
+enum EndPoints {
     static let baseUrl = "https://api.openweathermap.org"
 }
 
-struct Path {
+enum Path {
     static let searchWeather = "/data/2.5/weather"
 }

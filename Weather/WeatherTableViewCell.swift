@@ -8,6 +8,6 @@
 import UIKit
 
 class WeatherTableViewCell: UITableViewCell {
-    @IBOutlet weak var fieldName: UILabel!
-    @IBOutlet weak var fieldValue: UILabel!
+    @IBOutlet var fieldName: UILabel!
+    @IBOutlet var fieldValue: UILabel!
 }
