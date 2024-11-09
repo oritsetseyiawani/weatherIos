@@ -5,38 +5,36 @@
 //  Created by Melvyn Awani on 12/04/2022.
 //
 
-import Foundation
-import CoreLocation
 import Combine
+import CoreLocation
+import Foundation
 
 protocol HomeViewModelType {
-    var dataReceivedFromAPI: WeatherData? {get}
-    func getWeatherIconURL()->String
-    func informNetworkManagerToPerformRequest(textEntered: String, isDataReturned:@escaping(_ response: Bool)->Void)
-    func informNetworkManagerToPerformRequest(latitude: CLLocationDegrees, longitude: CLLocationDegrees, isDataReturned:@escaping(_ response: Bool)->Void)
-    var tableViewData: [WeatherRecord] {get}
-    func getBackgroundImage()-> String
-    
+    var dataReceivedFromAPI: WeatherData? { get }
+    func getWeatherIconURL() -> String
+    func informNetworkManagerToPerformRequest(textEntered: String, isDataReturned: @escaping (_ response: Bool) -> Void)
+    func informNetworkManagerToPerformRequest(latitude: CLLocationDegrees, longitude: CLLocationDegrees, isDataReturned: @escaping (_ response: Bool) -> Void)
+    var tableViewData: [WeatherRecord] { get }
+    func getBackgroundImage() -> String
 }
 
 class HomeViewModel: HomeViewModelType {
     private let networkManager: Networkable
-    
-    init(networkManager: Networkable){
+
+    init(networkManager: Networkable) {
         self.networkManager = networkManager
     }
+
     var dataReceivedFromAPI: WeatherData?
     var tableViewData: [WeatherRecord] = []
     var observers: [AnyCancellable] = []
 
-    
-    func informNetworkManagerToPerformRequest(textEntered: String, isDataReturned:@escaping(_ response: Bool)->Void){
-
-        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key":"3215a185b25eb297a66e63d137fb994f", "units": "metric", "q": textEntered, "appid": "111c704b48268f9adbc8dce3c913c272"]).sink { completion in
-            switch(completion) {
+    func informNetworkManagerToPerformRequest(textEntered: String, isDataReturned: @escaping (_ response: Bool) -> Void) {
+        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key": "3215a185b25eb297a66e63d137fb994f", "units": "metric", "q": textEntered, "appid": "111c704b48268f9adbc8dce3c913c272"]).sink { completion in
+            switch completion {
             case .finished:
                 print("")
-            case .failure(let completion):
+            case let .failure(completion):
                 print(completion)
             }
         } receiveValue: { [weak self] weatherData in
@@ -45,16 +43,13 @@ class HomeViewModel: HomeViewModelType {
             isDataReturned(true)
         }.store(in: &observers)
     }
-    
-    
-    
-    func informNetworkManagerToPerformRequest(latitude: CLLocationDegrees, longitude: CLLocationDegrees, isDataReturned:@escaping(_ response: Bool)->Void){
 
-        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key":"3215a185b25eb297a66e63d137fb994f", "units": "metric", "lat": "\(latitude)", "lon": "\(longitude)", "appid": "111c704b48268f9adbc8dce3c913c272"]).sink { completion in
-            switch(completion) {
+    func informNetworkManagerToPerformRequest(latitude: CLLocationDegrees, longitude: CLLocationDegrees, isDataReturned: @escaping (_ response: Bool) -> Void) {
+        networkManager.performRequest(baseUrl: EndPoints.baseUrl, path: Path.searchWeather, params: ["api_key": "3215a185b25eb297a66e63d137fb994f", "units": "metric", "lat": "\(latitude)", "lon": "\(longitude)", "appid": "111c704b48268f9adbc8dce3c913c272"]).sink { completion in
+            switch completion {
             case .finished:
                 print("")
-            case .failure(let completion):
+            case let .failure(completion):
                 print(completion)
             }
         } receiveValue: { [weak self] weatherData in
@@ -63,11 +58,11 @@ class HomeViewModel: HomeViewModelType {
             isDataReturned(true)
         }.store(in: &observers)
     }
-    
-    func getWeatherIconURL()->String{
+
+    func getWeatherIconURL() -> String {
         return "https://openweathermap.org/img/wn/\(dataReceivedFromAPI?.weather[0].icon ?? "")@4x.png"
     }
-    
+
     func populateTableView(weatherData: WeatherData) {
         let row1 = WeatherRecord(fieldName: "Feels like", fieldValue: "\(weatherData.main.feelsLike)°")
         let row2 = WeatherRecord(fieldName: "Minimum Temperature", fieldValue: "\(weatherData.main.tempMin)°")
@@ -78,15 +73,13 @@ class HomeViewModel: HomeViewModelType {
         let row7 = WeatherRecord(fieldName: "Wind Speed", fieldValue: "\(weatherData.wind.speed) m/s")
         let row8 = WeatherRecord(fieldName: "Longitude", fieldValue: "\(weatherData.coord.lon) ")
         let row9 = WeatherRecord(fieldName: "Latitude", fieldValue: "\(weatherData.coord.lat) ")
-        
+
         tableViewData = [row1, row2, row3, row4, row5, row6, row7, row8, row9]
-        
-        
     }
-    
-    func getBackgroundImage()-> String{
+
+    func getBackgroundImage() -> String {
         let weatherDescription = dataReceivedFromAPI?.weather[0].weatherDescription
-        switch (weatherDescription) {
+        switch weatherDescription {
         case "clear sky":
             return "clearSky"
         case "few clouds", "scattered clouds", "broken clouds", "overcast clouds":
